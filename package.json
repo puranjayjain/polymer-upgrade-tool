@@ -1,0 +1,29 @@
+{
+  "name": "polymer-upgrade-tool",
+  "version": "0.0.1",
+  "description": "a gulp task that helps you upgrade your polymer project from 1.x to pure 2.x class style elements",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "polymer",
+    "upgrade",
+    "migration",
+    "tool",
+    "2.0"
+  ],
+  "author": "Puranjay Jain <me+github@puranjayjain.com>",
+  "license": "MIT",
+  "dependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-filenames": "^4.0.1",
+    "gulp-inject": "^4.2.0",
+    "gulp-replace": "^0.5.4",
+    "gulp-replace-frommap": "^0.1.2",
+    "gulp-scan": "^0.1.4",
+    "gulp-sequence": "^0.4.6",
+    "merge-stream": "^1.0.1"
+  }
+}
