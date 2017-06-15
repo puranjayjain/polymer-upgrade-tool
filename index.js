@@ -41,7 +41,7 @@ const replaceElement = new Promise((resolve, reject) => {
 
   gulp.src(src)
   // replace in js in the Polymer({ inside the definition })
-    .pipe(replaceMap({before: /Polymer\({/igm, after: /<\/script>/igm, map: './map.js'}))
+    .pipe(replaceMap({before: /Polymer\({/ig, after: /<\/script>/igm, map: './map.js'}))
     .pipe(gulp.dest(dest))
     .on('end', () => {
       resolve(isElement);

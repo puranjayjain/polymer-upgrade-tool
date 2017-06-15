@@ -144,7 +144,7 @@ module.exports = function(options) {
     for (let item of map) {
       // if only to do it once
       if (item.hasOwnProperty('once')) {
-        string.replace(item.from, item.to);
+        string = string.replace(item.from, item.to);
       } else {
         string = replaceAll(item.from, item.to, string);
       }

@@ -1,8 +1,7 @@
 // contains the replacement map and helper methods
 
 const staticGet = (type, content) => {
-  return `
-    static get ${type} () {
+  return `static get ${type} () {
       return ${content};
     }
   `;
