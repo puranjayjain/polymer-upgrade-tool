@@ -22,7 +22,6 @@
     "gulp-filenames": "^4.0.1",
     "gulp-inject": "^4.2.0",
     "gulp-replace": "^0.5.4",
-    "gulp-replace-frommap": "^0.1.2",
     "gulp-scan": "^0.1.4",
     "gulp-sequence": "^0.4.6",
     "gulp-util": "^3.0.8",
