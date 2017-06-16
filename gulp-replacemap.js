@@ -5,7 +5,7 @@ const gUtil = require('gulp-util');
 const split = require('split');
 const XRegExp = require('xregexp');
 const hasProperties = require('has-properties');
-const replaceAll = require("replaceall");
+const balancedMatch = require('balanced-match');
 
 const PluginError = gUtil.PluginError;
 
@@ -139,14 +139,44 @@ module.exports = function(options) {
     return obj;
   }
 
+  function staticGet(type, content) {
+    return `static get ${type} () {
+        return ${content};
+      }
+    `;
+  }
+
   // replace until all of the map has are exhausted
   function replaceTextWithMap(string, map) {
-    for (let item of map) {
-      // if only to do it once
-      if (item.hasOwnProperty('once')) {
-        string = string.replace(item.from, item.to);
+    let pre,
+      post,
+      middle,
+      match,
+      balanced,
+      stringStart,
+      item;
+    for (item of map) {
+      // switch according to delimiters
+      if (item.delimiters) {
+        // get the matching string
+        match = XRegExp.match(string, item.search, 'one');
+        // get the matched string's end position
+        stringStart = string.indexOf(match) + match.length;
+        pre = string.substring(0, string.indexOf(match) - 1);
+        middle = string.substring(stringStart);
+        // get the matching brackets
+        balanced = balancedMatch(item.delimiters.start, item.delimiters.end, middle);
+        // do the transform according to the type
+        if (item.type === 'staticGet') {
+          match = XRegExp.exec(string, item.search);
+          string = `${pre}${middle}${balanced.post}`;
+          middle = staticGet(match[1], `${item.delimiters.start}${balanced.body}${item.delimiters.end}`);
+          string = `${pre}${middle}${balanced.post.replace(',', '')}`;
+        }
       } else {
-        string = replaceAll(item.from, item.to, string);
+        match = XRegExp.exec(string, item.search);
+        // assumes the type is staticGet
+        string = XRegExp.replace(string, item.search, staticGet(match[1], match[2]));
       }
     }
     return string;

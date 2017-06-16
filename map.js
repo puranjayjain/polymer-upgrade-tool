@@ -1,16 +1,42 @@
 // contains the replacement map and helper methods
 
-const staticGet = (type, content) => {
-  return `static get ${type} () {
-      return ${content};
-    }
-  `;
+const brackets = {
+  'curly': {
+    'start': '{',
+    'end': '}'
+  },
+  'square': {
+    'start': '[',
+    'end': ']'
+  },
+  'angle': {
+    'start': '<',
+    'end': '>'
+  }
 }
 
 module.exports = [
+  // is
   {
-    'from': /(is)(:\s+)(.*)(,)/ig,
-    'to': staticGet('$1', '$3'),
-    'once': true
-  }
+    'search': /(is)(?:(?:\s+)?:)(.*)(?:,)/i,
+    'delimiters': false,
+    'type': 'staticGet'
+  },
+  // properties
+  {
+    'search': /(properties)((\s+)?:)/i,
+    'delimiters': brackets.curly,
+    'type': 'staticGet'
+  },
+  // observers
+  {
+    'search': /(observers)((\s+)?:)/i,
+    'delimiters': brackets.square,
+    'type': 'staticGet'
+  },
+  // : function =>
+  // {
+  //   'from': /(\s+)?:(\s+)?function(\s+)?/igm,
+  //   'to': ' '
+  // }
 ];

@@ -12,7 +12,7 @@ const terminal = {
   error: chalk.bold.red
 };
 
-const src = 'test/paper-input-autocomplete.html';
+const src = 'test/paper-input-autocomplete-chips.html';
 // const src = 'test/input-autocomplete-behavior.html';
 const dest = 'temp';
 
