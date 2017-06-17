@@ -330,9 +330,10 @@ Example:
   </template>
   <script>
     Polymer({
-      static get is() {
-        return 'paper-input-autocomplete-chips';
+      static get is () {
+        return  'paper-input-autocomplete-chips';
       }
+    
 
       behaviors: [
         Polymer.IronControlState, Polymer.IronFormElementBehavior, Polymer.PaperInputBehavior, WebPaperElem.InputAutoCompleteBehavior
@@ -355,116 +356,117 @@ Example:
         }
       }
 
-      static get properties() {
+     static get properties () {
         return {
-          chipLabelPrefix: {
-            type: String,
-            value: ''
+        chipLabelPrefix: {
+          type: String,
+          value: ''
+        },
+        chipLabelSuffix: {
+          type: String,
+          value: ''
+        },
+        /**
+         * The candidates from local variable.
+         */
+        selectedObjects: {
+          type: Array,
+          value: function () {
+            return [];
           },
-          chipLabelSuffix: {
-            type: String,
-            value: ''
-          },
-          /**
-           * The candidates from local variable.
-           */
-          selectedObjects: {
-            type: Array,
-            value: function () {
-              return [];
-            },
-            notify: true
-          },
-          /**
-           * The candidates from local variable.
-           */
-          localCandidates: {
-            type: Array,
-            value: function () {
-              return [];
-            }
-          },
-          /**
-           * Hidden Input value.
-           */
-          hiddenValue: {
-            type: String,
-            notify: true
-          },
-
-          placeholderAfterSelected: {
-            type: String
-          },
-
-          _placeholderAfterSelected: {
-            type: String
-          },
-
-          /**
-            * Whether or not the chip uses an animated transition between opened and
-            * closed states
-            *
-            * @attribute animated
-            * @type Boolean
-            * @default true
-            */
-          animated: {
-            type: Boolean,
-            value: false,
-            reflectToAttribute: true
-          },
-
-          noChipImage: {
-            type: Boolean,
-            value: false,
-            reflectToAttribute: true
-          },
-
-          _boundOnBlur: {
-            type: Function,
-            value: function () {
-              return this._onBlur.bind(this);
-            }
-          },
-
-          maxSelectedItems: {
-            type: Number,
-            value: 0
-          },
-
-          readOnly: {
-            type: Boolean,
-            value: false,
-            reflectToAttribute: true
-          },
-
-          removeOnly: {
-            type: Boolean,
-            value: false,
-            reflectToAttribute: true
-          },
-
-          removeSelectedFromSuggestions: {
-            type: Boolean,
-            value: false
-          },
-
-          notCircular: {
-            type: Boolean,
-            value: false
-          },
-
-          withCustomSuggestionBoxPosition: {
-            type: Boolean,
-            value: false
-          },
-
-          noDisplayInputEditLine: {
-            type: Boolean,
-            value: false
+          notify: true
+        },
+        /**
+         * The candidates from local variable.
+         */
+        localCandidates: {
+          type: Array,
+          value: function () {
+            return [];
           }
-        };
+        },
+        /**
+         * Hidden Input value.
+         */
+        hiddenValue: {
+          type: String,
+          notify: true
+        },
+
+        placeholderAfterSelected: {
+          type: String
+        },
+
+        _placeholderAfterSelected: {
+          type: String
+        },
+
+        /**
+          * Whether or not the chip uses an animated transition between opened and
+          * closed states
+          *
+          * @attribute animated
+          * @type Boolean
+          * @default true
+          */
+        animated: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+
+        noChipImage: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+
+        _boundOnBlur: {
+          type: Function,
+          value: function () {
+            return this._onBlur.bind(this);
+          }
+        },
+
+        maxSelectedItems: {
+          type: Number,
+          value: 0
+        },
+
+        readOnly: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+
+        removeOnly: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+
+        removeSelectedFromSuggestions: {
+          type: Boolean,
+          value: false
+        },
+
+        notCircular: {
+          type: Boolean,
+          value: false
+        },
+
+        withCustomSuggestionBoxPosition: {
+          type: Boolean,
+          value: false
+        },
+
+        noDisplayInputEditLine: {
+          type: Boolean,
+          value: false
+        }
+      };
       }
+    
 
       get _paperInputContainerElement() {
         return this.$.paperInputContainer;
@@ -509,20 +511,21 @@ Example:
         this._paste(e);
       }
 
-      static get observers() {
+     static get observers () {
         return [
-          '_onInputValueChange(inputValue)',
-          '_onSelectedObjectsChange(selectedObjects)',
-          '_onSelectedObjectsChange(selectedObjects.splices)',
-          '_onAutoCompleteSelectedObjectChange(selectedObject)',
-          '_suggestionsChanged(_suggestions)',
-          '_suggestionsChanged(_suggestions.splices)',
-          '_loadingChanged(_loading)',
-          '_calculateSuggestionPanelPosition(suggestionsPosition)',
-          '_cptReadOnlyOrRemoveOnly(readOnly, removeOnly)',
-          '_cptInputTextStyle(readOnly, removeOnly, noDisplayInputEditLine)'
-        ];
+        '_onInputValueChange(inputValue)',
+        '_onSelectedObjectsChange(selectedObjects)',
+        '_onSelectedObjectsChange(selectedObjects.splices)',
+        '_onAutoCompleteSelectedObjectChange(selectedObject)',
+        '_suggestionsChanged(_suggestions)',
+        '_suggestionsChanged(_suggestions.splices)',
+        '_loadingChanged(_loading)',
+        '_calculateSuggestionPanelPosition(suggestionsPosition)',
+        '_cptReadOnlyOrRemoveOnly(readOnly, removeOnly)',
+        '_cptInputTextStyle(readOnly, removeOnly, noDisplayInputEditLine)'
+      ];
       }
+    
 
       _onInputValueChange(inputValue) {
         var hasSelectedObjects = ((this.selectedObjects) && (this.selectedObjects.length > 0));
@@ -846,7 +849,21 @@ Example:
       clear() {
         this.selectedObjects = [];
       }
+    });
+  </script>
+</dom-module>dleValue(inputElement);
+      },
 
+      _onInputFocus: function (e) {
+        this.fire('input-focused');
+        if (this.searchOnGotFocus) {
+          this._search(this._safeInputValue);
+        }
+      },
+
+      clear: function () {
+        this.selectedObjects = [];
+      }
     });
   </script>
 </dom-module>

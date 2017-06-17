@@ -149,6 +149,13 @@ module.exports = function(options) {
       }
     `;
   }
+  
+  function replaceIfExists(string, replace, replacement) {
+    if (string.indexOf(replace) > -1) {
+      string = string.replace(replace, replacement);
+    }
+    return string;
+  }
 
   // replace until all of the map has are exhausted
   function replaceTextWithMap(string, map) {
@@ -174,7 +181,7 @@ module.exports = function(options) {
           match = XRegExp.exec(string, item.search);
           string = `${pre}${middle}${balanced.post}`;
           middle = staticGet(match[1], `${item.delimiters.start}${balanced.body}${item.delimiters.end}`);
-          string = `${pre}${middle}${balanced.post.replace(',', '')}`;
+          string = `${pre}${middle}${replaceIfExists(balanced.post, ',', '')}`;
         } else if (item.type === 'remove') {
           while (1) {
             // get the matching string
@@ -189,7 +196,7 @@ module.exports = function(options) {
               // get the matching brackets
               balanced = balancedMatch(item.delimiters.start, item.delimiters.end, middle);
               middle = `${item.delimiters.start}${balanced.body}${item.delimiters.end}`;
-              string = `${pre}${middle}${balanced.post.replace(',', '')}`;
+              string = `${pre}${middle}${replaceIfExists(balanced.post, ',', '')}`;
             } else {
               break;
             }
