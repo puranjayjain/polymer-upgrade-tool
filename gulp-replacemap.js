@@ -6,6 +6,7 @@ const split = require('split');
 const XRegExp = require('xregexp');
 const hasProperties = require('has-properties');
 const balancedMatch = require('balanced-match');
+const _ = require('lodash');
 
 const PluginError = gUtil.PluginError;
 
@@ -13,6 +14,9 @@ let map;
 
 // consts
 const PLUGIN_NAME = 'gulp-replace-frommap';
+
+// merge the lookbehind extension
+_.merge(XRegExp, require('xregexp-lookbehind'));
 
 module.exports = function(options) {
   // through2.obj(fn) is a convinient wrapper around through2({ objectMode: true }, fn)
@@ -149,7 +153,6 @@ module.exports = function(options) {
   // replace until all of the map has are exhausted
   function replaceTextWithMap(string, map) {
     let pre,
-      post,
       middle,
       match,
       balanced,
@@ -158,20 +161,39 @@ module.exports = function(options) {
     for (item of map) {
       // switch according to delimiters
       if (item.delimiters) {
-        // get the matching string
-        match = XRegExp.match(string, item.search, 'one');
-        // get the matched string's end position
-        stringStart = string.indexOf(match) + match.length;
-        pre = string.substring(0, string.indexOf(match) - 1);
-        middle = string.substring(stringStart);
-        // get the matching brackets
-        balanced = balancedMatch(item.delimiters.start, item.delimiters.end, middle);
         // do the transform according to the type
         if (item.type === 'staticGet') {
+          // get the matching string
+          match = XRegExp.match(string, item.search, 'one');
+          // get the matched string's end position
+          stringStart = string.indexOf(match) + match.length;
+          pre = string.substring(0, string.indexOf(match) - 1);
+          middle = string.substring(stringStart);
+          // get the matching brackets
+          balanced = balancedMatch(item.delimiters.start, item.delimiters.end, middle);
           match = XRegExp.exec(string, item.search);
           string = `${pre}${middle}${balanced.post}`;
           middle = staticGet(match[1], `${item.delimiters.start}${balanced.body}${item.delimiters.end}`);
           string = `${pre}${middle}${balanced.post.replace(',', '')}`;
+        } else if (item.type === 'remove') {
+          while (1) {
+            // get the matching string
+            match = XRegExp.testLb(string, ...item.search);
+            if (match) {
+              match = XRegExp.searchLb(string, ...item.search);
+              // get the matched string's end position
+              stringStart = match + XRegExp.execLb(string, ...item.search)[0].length;
+              // pre = string.substring(0, match - 1);
+              middle = string.substring(stringStart);
+              pre = `${string.substring(0, match)}${string.substring(stringStart, string.indexOf(item.delimiters.start, stringStart))}`;
+              // get the matching brackets
+              balanced = balancedMatch(item.delimiters.start, item.delimiters.end, middle);
+              middle = `${item.delimiters.start}${balanced.body}${item.delimiters.end}`;
+              string = `${pre}${middle}${balanced.post.replace(',', '')}`;
+            } else {
+              break;
+            }
+          }
         }
       } else {
         match = XRegExp.exec(string, item.search);

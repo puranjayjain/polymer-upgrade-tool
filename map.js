@@ -35,8 +35,9 @@ module.exports = [
     'type': 'staticGet'
   },
   // : function =>
-  // {
-  //   'from': /(\s+)?:(\s+)?function(\s+)?/igm,
-  //   'to': ' '
-  // }
+  {
+    'search': ['(?<!value|type)', /(\s+)?\:(\s+)?(function(\s+)?)/i],
+    'delimiters': brackets.curly,
+    'type': 'remove'
+  }
 ];

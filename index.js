@@ -14,7 +14,7 @@ const terminal = {
 
 const src = 'test/paper-input-autocomplete-chips.html';
 // const src = 'test/input-autocomplete-behavior.html';
-const dest = 'temp';
+const dest = 'output';
 
 // detect if it is a behavior or an element
 const detectFileType = new Promise((resolve, reject) => {
