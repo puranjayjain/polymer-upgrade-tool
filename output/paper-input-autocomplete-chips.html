@@ -331,9 +331,9 @@ Example:
   <script>
     Polymer({
       static get is () {
-        return  'paper-input-autocomplete-chips';
-      }
-    
+      return  'paper-input-autocomplete-chips';
+    }
+  
 
       behaviors: [
         Polymer.IronControlState, Polymer.IronFormElementBehavior, Polymer.PaperInputBehavior, WebPaperElem.InputAutoCompleteBehavior
@@ -357,7 +357,7 @@ Example:
       }
 
      static get properties () {
-        return {
+      return {
         chipLabelPrefix: {
           type: String,
           value: ''
@@ -465,8 +465,8 @@ Example:
           value: false
         }
       };
-      }
-    
+    }
+  
 
       get _paperInputContainerElement() {
         return this.$.paperInputContainer;
@@ -512,7 +512,7 @@ Example:
       }
 
      static get observers () {
-        return [
+      return [
         '_onInputValueChange(inputValue)',
         '_onSelectedObjectsChange(selectedObjects)',
         '_onSelectedObjectsChange(selectedObjects.splices)',
@@ -524,8 +524,8 @@ Example:
         '_cptReadOnlyOrRemoveOnly(readOnly, removeOnly)',
         '_cptInputTextStyle(readOnly, removeOnly, noDisplayInputEditLine)'
       ];
-      }
-    
+    }
+  
 
       _onInputValueChange(inputValue) {
         var hasSelectedObjects = ((this.selectedObjects) && (this.selectedObjects.length > 0));

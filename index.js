@@ -1,7 +1,8 @@
 const gulp = require('gulp');
 const scan = require('gulp-scan');
 const chalk = require('chalk');
-const replaceMap = require('./gulp-replacemap.js');
+
+const replaceMap = require('./lib/gulp/gulp-replacemap.js');
 
 // file config or otherwise
 const terminal = {
@@ -9,6 +10,7 @@ const terminal = {
   error: chalk.bold.red
 };
 
+const replaceMapOption = '../gulp/map.js';
 const src = 'test/paper-input-autocomplete-chips.html';
 // const src = 'test/input-autocomplete-behavior.html';
 const dest = 'output';
@@ -35,7 +37,10 @@ const replaceElement = () => {
   return new Promise((resolve, reject) => {
     gulp.src(src)
     // replace in js in the Polymer({ inside the definition })
-      .pipe(replaceMap({before: /Polymer\({/ig, after: /<\/script>/igm, map: './map.js'})).pipe(gulp.dest(dest)).on('end', () => resolve(1)).on('error', () => reject(1));
+      .pipe(replaceMap({before: /Polymer\({/ig, after: /<\/script>/igm, map: replaceMapOption}))
+      .pipe(gulp.dest(dest))
+      .on('end', () => resolve(1))
+      .on('error', () => reject(0));
   });
 }
 
@@ -47,6 +52,7 @@ const consoleError = (text) => {
 // main task
 async function main() {
   let isElement = false;
+  
   try {
     isElement = await detectFileType();
   } catch (err) {
