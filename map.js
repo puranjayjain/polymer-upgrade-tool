@@ -36,7 +36,9 @@ module.exports = [
   },
   // : function =>
   {
-    'search': ['(?<!value|type)', /(\s+)?\:(\s+)?(function(\s+)?)/i],
+    'search': [
+      '(?<!value|type)', /(\s+)?\:(\s+)?(function(\s+)?)/i
+    ],
     'delimiters': brackets.curly,
     'type': 'remove'
   }

@@ -1,9 +1,6 @@
-'use strict';
-
 const gulp = require('gulp');
 const scan = require('gulp-scan');
 const chalk = require('chalk');
-// const replaceMap = require('gulp-replace-frommap');
 const replaceMap = require('./gulp-replacemap.js');
 
 // file config or otherwise
@@ -17,39 +14,31 @@ const src = 'test/paper-input-autocomplete-chips.html';
 const dest = 'output';
 
 // detect if it is a behavior or an element
-const detectFileType = new Promise((resolve, reject) => {
+const detectFileType = () => {
   let isElement = false;
 
-  // check for file type
-  gulp.src(src).pipe(scan({
-    term: '<dom-module',
-    // do something with {String} `match`
-    // `file` is a clone of the vinyl file.
-    fn: (match, file) => {
-      isElement = true;
-    }
-  })).pipe(gulp.dest(dest)).on('end', () => {
-    resolve(isElement);
-  }).on('error', () => {
-    reject(isElement)
+  return new Promise((resolve, reject) => {
+    // check for file type
+    gulp.src(src).pipe(scan({
+      term: '<dom-module',
+      // do something with {String} `match`
+      // `file` is a clone of the vinyl file.
+      fn: (match, file) => {
+        isElement = true;
+      }
+    })).pipe(gulp.dest(dest)).on('finish', () => resolve(isElement)).on('error', () => reject(isElement));
   });
-});
+}
 
 // replacement for an element
-const replaceElement = new Promise((resolve, reject) => {
-  let isElement = false;
+const replaceElement = () => {
 
-  gulp.src(src)
-  // replace in js in the Polymer({ inside the definition })
-    .pipe(replaceMap({before: /Polymer\({/ig, after: /<\/script>/igm, map: './map.js'}))
-    .pipe(gulp.dest(dest))
-    .on('end', () => {
-      resolve(isElement);
-    })
-    .on('error', () => {
-      reject(isElement);
-    });
-});
+  return new Promise((resolve, reject) => {
+    gulp.src(src)
+    // replace in js in the Polymer({ inside the definition })
+      .pipe(replaceMap({before: /Polymer\({/ig, after: /<\/script>/igm, map: './map.js'})).pipe(gulp.dest(dest)).on('end', () => resolve()).on('error', () => reject());
+  });
+}
 
 // helper methods
 const consoleError = (text) => {
@@ -65,7 +54,7 @@ async function main() {
     consoleError('Error : File could not be found');
   } finally {
     if (isElement) {
-      await replaceElement;
+      isElement = await replaceElement;
     } else {}
   }
 }

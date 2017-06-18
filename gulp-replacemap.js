@@ -90,21 +90,21 @@ module.exports = function(options) {
         current = filecontents.substr(0, pointer);
         // cut off the match part from the original source
         filecontents = filecontents.substr(pointer);
-        current = replaceTextWithMap(current, map);
+        current = replaceTextWithMap(current, map);        
         replaced = replaced.concat(current);
-
+        
         // now attach the after text
         stringSuperman = getStringWithLength(filecontents, options.after);
         replaced = replaced.concat(stringSuperman.textValue);
         pointer = stringSuperman.textLength;
+        // console.log(pointer);
 
-        // cut them matched text loose
+        // cut the matched text loose
         filecontents = filecontents.substr(pointer);
       }
 
       // write off the last chunk which is left
       replaced = replaced.concat(filecontents);
-
       // write data back to the file
       file.contents = Buffer.from(replaced, encoding);
 
