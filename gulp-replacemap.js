@@ -90,9 +90,9 @@ module.exports = function(options) {
         current = filecontents.substr(0, pointer);
         // cut off the match part from the original source
         filecontents = filecontents.substr(pointer);
-        current = replaceTextWithMap(current, map);        
+        current = replaceTextWithMap(current, map);
         replaced = replaced.concat(current);
-        
+
         // now attach the after text
         stringSuperman = getStringWithLength(filecontents, options.after);
         replaced = replaced.concat(stringSuperman.textValue);
@@ -149,7 +149,7 @@ module.exports = function(options) {
       }
     `;
   }
-  
+
   function replaceIfExists(string, replace, replacement) {
     if (string.indexOf(replace) > -1) {
       string = string.replace(replace, replacement);
@@ -201,6 +201,10 @@ module.exports = function(options) {
               break;
             }
           }
+        } else if (item.type === 'handleEvents') {
+          // get the matching string
+          match = XRegExp.match(string, item.search, 'one');
+          console.log(match);
         }
       } else {
         match = XRegExp.exec(string, item.search);

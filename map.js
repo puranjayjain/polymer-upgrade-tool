@@ -41,5 +41,11 @@ module.exports = [
     ],
     'delimiters': brackets.curly,
     'type': 'remove'
+  },
+  // listeners => add and remove listeners
+  {
+    'search': /(listeners)((\s+)?:)/i,
+    'delimiters': brackets.curly,
+    'type': 'handleEvents'
   }
 ];
