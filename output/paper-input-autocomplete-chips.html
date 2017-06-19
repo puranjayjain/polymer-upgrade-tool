@@ -330,16 +330,13 @@ Example:
   </template>
   <script>
     Polymer({
-      static get is () {
-      return  'paper-input-autocomplete-chips';
-    }
-  
+      is: 'paper-input-autocomplete-chips',
 
       behaviors: [
         Polymer.IronControlState, Polymer.IronFormElementBehavior, Polymer.PaperInputBehavior, WebPaperElem.InputAutoCompleteBehavior
       ],
 
-      _suggestionFilterBeforePublish(suggestions) {
+      _suggestionFilterBeforePublish: function (suggestions) {
         if (this.removeSelectedFromSuggestions) {
           var selectedKeys = [];
           this.selectedObjects.forEach(function (item) {
@@ -354,10 +351,9 @@ Example:
         } else {
           return suggestions;
         }
-      }
+      },
 
-     static get properties () {
-      return {
+      properties: {
         chipLabelPrefix: {
           type: String,
           value: ''
@@ -464,9 +460,7 @@ Example:
           type: Boolean,
           value: false
         }
-      };
-    }
-  
+      },
 
       get _paperInputContainerElement() {
         return this.$.paperInputContainer;
@@ -485,34 +479,33 @@ Example:
         'iron-input-validate': '_onIronInputValidate'
       },
 
-      _onTap(e) {
+      _onTap: function (e) {
         if ((e.target === this.$.inputTagsContainer) && (!this._inputElement.focused)) {
           this._inputElement.focus();
         }
-      }
+      },
 
-      _local_keyup(e) {
+      _local_keyup: function (e) {
         this._keyup(e);
-      }
+      },
 
-      _local_keydown(e) {
+      _local_keydown: function (e) {
         if (e.which === 8) {
           this._keydown_backspace_handler(e);
         } else {
           this._keydown(e);
         }
-      }
+      },
 
-      _local_blur(e) {
+      _local_blur: function (e) {
         this._blur(e);
-      }
+      },
 
-      _local_paste(e) {
+      _local_paste: function (e) {
         this._paste(e);
-      }
+      },
 
-     static get observers () {
-      return [
+      observers: [
         '_onInputValueChange(inputValue)',
         '_onSelectedObjectsChange(selectedObjects)',
         '_onSelectedObjectsChange(selectedObjects.splices)',
@@ -523,11 +516,9 @@ Example:
         '_calculateSuggestionPanelPosition(suggestionsPosition)',
         '_cptReadOnlyOrRemoveOnly(readOnly, removeOnly)',
         '_cptInputTextStyle(readOnly, removeOnly, noDisplayInputEditLine)'
-      ];
-    }
-  
+      ],
 
-      _onInputValueChange(inputValue) {
+      _onInputValueChange: function (inputValue) {
         var hasSelectedObjects = ((this.selectedObjects) && (this.selectedObjects.length > 0));
 
         this.hiddenValue = ((inputValue === '') && hasSelectedObjects)
@@ -535,17 +526,17 @@ Example:
           : inputValue;
 
         this._paperInputContainerElement._handleValueAndAutoValidate(this._inputElement);
-      }
+      },
 
-      _loadingChanged(_loading) {
+      _loadingChanged: function (_loading) {
         if (this._loading) {
           this.showSuggestionsPanel();
         } else {
           this.hideSuggestionsPanel();
         }
-      }
+      },
 
-      _onSelectedObjectsChange(selectedObjects) {
+      _onSelectedObjectsChange: function (selectedObjects) {
 
         if (selectedObjects) {
           if (selectedObjects.indexSplices) {
@@ -564,9 +555,9 @@ Example:
         this._updatePlaceholderAfterSelected();
         this._updateHiddenInputTextForFloatLabel();
         this.selectedObject = null;
-      }
+      },
 
-      _updatePlaceholderAfterSelected() {
+      _updatePlaceholderAfterSelected: function () {
         if ((this.alwaysFloatLabel) && ((!this.selectedObjects) || (this.selectedObjects.length <= 0))) {
           this._placeholderAfterSelected = this.placeholder;
         } else if ((this.selectedObjects) && (this.selectedObjects.length > 0)) {
@@ -574,15 +565,15 @@ Example:
         } else {
           this._placeholderAfterSelected = null;
         }
-      }
+      },
 
-      getInitialsFrom(value) {
+      getInitialsFrom: function (value) {
         if (value) {
           return value.replace(/[^A-Z]/g, '');
         }
-      }
+      },
 
-      _fixMissingObjextKeys(objectArray) {
+      _fixMissingObjextKeys: function (objectArray) {
         if (objectArray) {
           for (var i = 0; i < objectArray.length; i++) {
             if (!objectArray[i].key) {
@@ -590,9 +581,9 @@ Example:
             }
           }
         }
-      }
+      },
 
-      _findObjectAlreadySelected(objValue) {
+      _findObjectAlreadySelected: function (objValue) {
         if (!objValue) {
           return -1;
         }
@@ -606,9 +597,9 @@ Example:
             return i;
           }
         return -1;
-      }
+      },
 
-      _onAutoCompleteSelectedObjectChange(selectedObject) {
+      _onAutoCompleteSelectedObjectChange: function (selectedObject) {
 
         this.appendSelectedObject(selectedObject);
 
@@ -616,18 +607,18 @@ Example:
         this._setSelectedItem(null);
 
         this._updateHiddenInputTextForFloatLabel();
-      }
+      },
 
-      _onChipRemove(e) {
+      _onChipRemove: function (e) {
 
         e.preventDefault();
 
         this.removeSelectedObject(e.target.dataObject);
 
         this._updateHiddenInputTextForFloatLabel();
-      }
+      },
 
-      _updateHiddenInputTextForFloatLabel() {
+      _updateHiddenInputTextForFloatLabel: function () {
 
         this.hiddenValue = (this.hasSelectedObjects)
           ? ' '
@@ -638,17 +629,17 @@ Example:
         } else {
           this.$.inputTagsContainer.classList.remove('chip-item-added');
         }
-      }
+      },
 
-      _suggestionsChanged(suggestions) {
+      _suggestionsChanged: function (suggestions) {
         if ((this._suggestions) && (this._suggestions.length > 0)) {
           this.showSuggestionsPanel();
         } else {
           this.hideSuggestionsPanel();
         }
-      }
+      },
 
-      _cptReadOnlyOrRemoveOnly(readOnly, removeOnly) {
+      _cptReadOnlyOrRemoveOnly: function (readOnly, removeOnly) {
 
         var ableToInputText = false;
 
@@ -659,9 +650,9 @@ Example:
         } else {
           this.$.inputContainer.hidden = false;
         }
-      }
+      },
 
-      _canRemoveChip(chipItem, readOnly, removeOnly) {
+      _canRemoveChip: function (chipItem, readOnly, removeOnly) {
         var canRemoveChip = false;
 
         if ((!chipItem.readOnly) && (!readOnly)) {
@@ -669,9 +660,9 @@ Example:
         }
 
         return canRemoveChip;
-      }
+      },
 
-      _canInputText(readOnly, removeOnly) {
+      _canInputText: function (readOnly, removeOnly) {
         var canInputText = false;
 
         if ((!readOnly) && (!removeOnly)) {
@@ -679,9 +670,9 @@ Example:
         }
 
         return canInputText;
-      }
+      },
 
-      _cptInputTextStyle(readOnly, removeOnly, noDisplayInputEditLine) {
+      _cptInputTextStyle: function (readOnly, removeOnly, noDisplayInputEditLine) {
         if (noDisplayInputEditLine) {
           this.classList.add('no-display-input-edit-line');
         } else {
@@ -693,27 +684,27 @@ Example:
         }
 
         this.updateStyles();
-      }
+      },
 
       // Element Lifecycle
 
-      ready() {
+      ready: function () {
         this._override_paperInputContainer();
 
         this.addEventListener('blur', this._boundOnBlur, true);
-      }
+      },
 
-      attached() {}
+      attached: function () {},
 
-      detached() {}
+      detached: function () {},
 
       // Element Behavior
 
-      hideSuggestionsPanel() {
+      hideSuggestionsPanel: function () {
         this.$.suggestionsPanel.classList.add('hidden');
-      }
+      },
 
-      showSuggestionsPanel() {
+      showSuggestionsPanel: function () {
         this.fire('before-show-suggestion-panel');
         this._calculateSuggestionPanelPosition();
         this.$.suggestionsPanel.classList.remove('hidden');
@@ -724,9 +715,9 @@ Example:
             this.$.autocompleteResults.selectLast();
           }
         }, 1);
-      }
+      },
 
-      _calculateSuggestionPanelPosition() {
+      _calculateSuggestionPanelPosition: function () {
         if (this.withCustomSuggestionBoxPosition) {
           fire('custom-suggestion-position', {
             inputContainer: this.$.paperInputContainer,
@@ -745,19 +736,19 @@ Example:
             this.$.suggestionsPanel.style.bottom = '';
           }
         }
-      }
+      },
 
-      removeSelectedObject(selectedObject) {
+      removeSelectedObject: function (selectedObject) {
         this.removeSelectedObjectByIndex(this._findObjectAlreadySelected(selectedObject));
-      }
+      },
 
-      removeSelectedObjectByIndex(objectIndex) {
+      removeSelectedObjectByIndex: function (objectIndex) {
         if (objectIndex >= 0) {
           this.arrayDelete('selectedObjects', this.selectedObjects[objectIndex]);
         }
-      }
+      },
 
-      appendSelectedObject(selectedObject) {
+      appendSelectedObject: function (selectedObject) {
         if (!selectedObject) {
           return;
         }
@@ -789,28 +780,28 @@ Example:
             this.push('selectedObjects', selectedObject);
           }
         }
-      }
+      },
 
-      _onBlur() {
+      _onBlur: function () {
         this._paperInputContainerElement._handleValueAndAutoValidate(this._inputElement);
-      }
+      },
 
-      _keydown_backspace_handler(e) {
+      _keydown_backspace_handler: function (e) {
         if ((!this.inputValue) || (this.inputValue === '')) {
           this.removeSelectedObjectByIndex(this.selectedObjects.length - 1);
         }
-      }
+      },
 
-      _onIronInputValidate(event) {
+      _onIronInputValidate: function (event) {
         this.invalid = this._inputElement.invalid;
-      }
+      },
 
-      _override_paperInputContainer() {
+      _override_paperInputContainer: function () {
         this._paperInputContainerElement._handleValue = this._override_paperInputContainer_handleValue;
         this._paperInputContainerElement._handleValueAndAutoValidate = this._override_paperInputContainer_handleValueAndAutoValidate;
-      }
+      },
 
-      _override_paperInputContainer_handleValue(inputElement) {
+      _override_paperInputContainer_handleValue: function (inputElement) {
         inputElement = this.dataHost._inputElement;
 
         var value = this.dataHost.inputValue;
@@ -821,9 +812,9 @@ Example:
           this._inputHasContent = false;
         }
         this.updateAddons({inputElement: inputElement, value: value, invalid: this.invalid});
-      }
+      },
 
-      _override_paperInputContainer_handleValueAndAutoValidate(inputElement) {
+      _override_paperInputContainer_handleValueAndAutoValidate: function (inputElement) {
         inputElement = this.dataHost._inputElement;
 
         if (this.autoValidate) {
@@ -837,16 +828,16 @@ Example:
         }
         // Call this last to notify the add-ons.
         this._handleValue(inputElement);
-      }
+      },
 
-      _onInputFocus(e) {
+      _onInputFocus: function (e) {
         this.fire('input-focused');
         if (this.searchOnGotFocus) {
           this._search(this._safeInputValue);
         }
-      }
+      },
 
-      clear() {
+      clear: function () {
         this.selectedObjects = [];
       }
     });
