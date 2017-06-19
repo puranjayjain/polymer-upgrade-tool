@@ -481,6 +481,42 @@ Example:
       }
 
       
+    constructor() {
+      super();
+      
+      
+          this._listener_onTap = this._onTap.bind(this);      
+        
+          this._listener_onIronInputValidate = this.$.iron._onIronInputValidate.bind(this);      
+        
+                
+        
+    }
+    
+    connectedCallback() {
+      super.connectedCallback();
+      
+      
+          this.addEventListener('tap', this._listener_onTap);      
+        
+          this.$.iron.addEventListener('validate', this._listener_onIronInputValidate);      
+        
+          this.addEventListener('iron-input-validate', this._listener_onIronInputValidate);      
+        
+    }
+
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      
+      
+          this.removeEventListener('tap', this._listener_onTap);      
+        
+          this.$.iron.removeEventListener('validate', this._listener_onIronInputValidate);      
+        
+          this.removeEventListener('iron-input-validate', this._listener_onIronInputValidate);      
+          
+    }
+  
 
       _onTap(e) {
         if ((e.target === this.$.inputTagsContainer) && (!this._inputElement.focused)) {
