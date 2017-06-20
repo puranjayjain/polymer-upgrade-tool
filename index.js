@@ -11,8 +11,7 @@ const terminal = {
 };
 
 const replaceMapOption = '../gulp/map.js';
-const src = 'test/paper-input-autocomplete-chips.html';
-// const src = 'test/input-autocomplete-behavior.html';
+const src = 'test/emojione-selector.html';
 const dest = 'output';
 
 // detect if it is a behavior or an element

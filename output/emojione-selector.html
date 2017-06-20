@@ -293,11 +293,15 @@ to style the tone picker's dialog.
   <script>
     Polymer({
 
-      is: 'emojione-selector',
+      static get is () {
+      return  'emojione-selector';
+    }
+  
 
       behaviors: [Polymer.IronResizableBehavior],
 
-      properties: {
+     static get properties () {
+      return {
         /**
          * Fired when emoji changes.
          *
@@ -540,23 +544,80 @@ to style the tone picker's dialog.
           type: Array,
           value: ['class', 'src']
         }
-      },
+      };
+    }
+  
 
-      observers: [
+     static get observers () {
+      return [
         'onRecentlyUsedEmojisChange(rawemoji, recentlyUsedEmojis.*)', 'onOpenedChange(opened, isRendered)', 'onSelectedChange(selected)', 'onSearchChange(search.*)'
-      ],
+      ];
+    }
+  
 
-      listeners: {
-        'emojiList.tap': 'setEmojiTap',
-        'clearSearch.tap': 'onClearSearchTap',
-        'categoryAjax.response': '_onCategoryResponse',
-        'emojiAjax.response': '_onEmojiResponse',
-        'iron-resize': 'onResize',
-        'keydown': 'onCtrlEvent',
-        'keyup': 'onCloseCtrlEvent'
-      },
+      
+    constructor() {
+      super();
+      
+      
+          this._listenersetEmojiTap = this.$.emojiList.setEmojiTap.bind(this);      
+        
+          this._listeneronClearSearchTap = this.$.clearSearch.onClearSearchTap.bind(this);      
+        
+          this._listener_onCategoryResponse = this.$.categoryAjax._onCategoryResponse.bind(this);      
+        
+          this._listener_onEmojiResponse = this.$.emojiAjax._onEmojiResponse.bind(this);      
+        
+          this._listeneronResize = this.onResize.bind(this);      
+        
+          this._listeneronCtrlEvent = this.onCtrlEvent.bind(this);      
+        
+          this._listeneronCloseCtrlEvent = this.onCloseCtrlEvent.bind(this);      
+        
+    }
+    
+    connectedCallback() {
+      super.connectedCallback();
+      
+      
+          this.$.emojiList.addEventListener('tap', this._listenersetEmojiTap);      
+        
+          this.$.clearSearch.addEventListener('tap', this._listeneronClearSearchTap);      
+        
+          this.$.categoryAjax.addEventListener('response', this._listener_onCategoryResponse);      
+        
+          this.$.emojiAjax.addEventListener('response', this._listener_onEmojiResponse);      
+        
+          this.addEventListener('iron-resize', this._listeneronResize);      
+        
+          this.addEventListener('keydown', this._listeneronCtrlEvent);      
+        
+          this.addEventListener('keyup', this._listeneronCloseCtrlEvent);      
+        
+    }
 
-      ready: function () {
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      
+      
+          this.$.emojiList.removeEventListener('tap', this._listenersetEmojiTap);      
+        
+          this.$.clearSearch.removeEventListener('tap', this._listeneronClearSearchTap);      
+        
+          this.$.categoryAjax.removeEventListener('response', this._listener_onCategoryResponse);      
+        
+          this.$.emojiAjax.removeEventListener('response', this._listener_onEmojiResponse);      
+        
+          this.removeEventListener('iron-resize', this._listeneronResize);      
+        
+          this.removeEventListener('keydown', this._listeneronCtrlEvent);      
+        
+          this.removeEventListener('keyup', this._listeneronCloseCtrlEvent);      
+          
+    }
+  
+
+      ready() {
         this.categoryUrl = this.importPath + '../emojione/categories.json';
         this.url = this.importPath + '../emojione/emoji.json';
 
@@ -566,25 +627,25 @@ to style the tone picker's dialog.
 
         this.ctrlTarget = this;
         this.arrowTarget = this.$.emojiList;
-      },
+      }
 
       /**
        * initiate the local storage for recent emoji and skin tone
        */
 
-      initRecentEmoji: function () {
+      initRecentEmoji() {
         this.recentlyUsedEmojis = [];
-      },
+      }
 
-      initSkintone: function () {
+      initSkintone() {
         this.tone = 'tone0';
-      },
+      }
 
       /**
        * observers
        */
 
-      onRecentlyUsedEmojisChange: function (rawemoji, recentlyUsedEmojis) {
+      onRecentlyUsedEmojisChange(rawemoji, recentlyUsedEmojis) {
         if (recentlyUsedEmojis.base && recentlyUsedEmojis.base.length > 0 && rawemoji) {
           // parse and add them to recentlyUsedEmojisRendered
           this.recentlyUsedEmojisRendered = [];
@@ -592,9 +653,9 @@ to style the tone picker's dialog.
             this.push('recentlyUsedEmojisRendered', this._convertImgtoAttributes(_.cloneDeep(rawemoji[emoji])));
           }
         }
-      },
+      }
 
-      onOpenedChange: function (opened, isRendered) {
+      onOpenedChange(opened, isRendered) {
         // if the picker was opened do it
         if (opened && isRendered) {
           // if there are recently used emoji select that tab
@@ -605,15 +666,16 @@ to style the tone picker's dialog.
           }
           // focus the selected tab
           this.async(function () {
-            this.$$('#tab' + this.selected).focus();
+            this.shadowRoot.querySelector('#tab' + this.selected).focus();
           }, 200);
           this.setAttribute('tabindex', '0');
         } else {
           this.setAttribute('tabindex', '-1');
+          evessnt.target
         }
-      },
+      }
 
-      onSearchChange: function (search) {
+      onSearchChange(search) {
         // if selected is in regular bounds store it
         if (this.selected > -1 && this.selected < this.initTabs) {
           this.prevSelected = this.selected;
@@ -639,9 +701,9 @@ to style the tone picker's dialog.
           this.currentList = _.uniqBy(this.searchResults);
           this.selected = -1;
         }
-      },
+      }
 
-      onSelectedChange: function (selected) {
+      onSelectedChange(selected) {
         // only if selected if less than -1
         if (selected < 0) {
           return;
@@ -654,68 +716,68 @@ to style the tone picker's dialog.
         } else {
           this.currentList = this.get('emojis.' + this.categories[selected - 1].category);
         }
-      },
+      }
 
-      _getNormalIndex: function (index) {
+      _getNormalIndex(index) {
         return index + 1;
-      },
+      }
 
-      _getClass: function (hasCtrl) {
+      _getClass(hasCtrl) {
         if (hasCtrl) {
           return 'show';
         } else {
           return '';
         }
-      },
+      }
 
       // get property in toned-safe way in case the conditions meet
-      _getToneProperty: function (emoji, tone, property, selected) {
+      _getToneProperty(emoji, tone, property, selected) {
         if (tone === 'tone0' || !emoji._diverse || selected === 0) {
           return emoji[property];
         } else {
           return emoji._diversities[tone][property];
         }
-      },
+      }
 
-      _getCategoryIcon: function (category) {
+      _getCategoryIcon(category) {
         return this.get('categoryIconMap.' + category);
-      },
+      }
 
-      _getEmoji: function (emoji) {
+      _getEmoji(emoji) {
         return emoji.shortname || emoji.code_points.base;
-      },
+      }
 
-      _renderEmoji: function (emoji) {
+      _renderEmoji(emoji) {
         return emojione.toImage(this._getEmoji(emoji));
-      },
+      }
 
-      _getAttribute: function (str, attr) {
+      _getAttribute(str, attr) {
         var end = '"';
         attr += '="';
         attr = str.indexOf(attr) + attr.length;
         end = str.indexOf(end, attr);
         return str.substring(attr, end);
-      },
+      }
 
-      _convertImgtoAttributes: function (emoji) {
+      _convertImgtoAttributes(emoji) {
         var img = this._renderEmoji(emoji);
         // put img attributes to the emoji tag
         for (var attribute of this.extractAttributes) {
           emoji['_' + attribute] = this._getAttribute(img, attribute);
         }
         return emoji;
-      },
+      }
 
-      _onCategoryResponse: function () {
+      _onCategoryResponse() {
         // prepare the emoji category list
         for (var category of this.categories) {
           this.set('emojis.' + category.category, []);
         }
         // request for emojis list
         this.$.emojiAjax.generateRequest();
-      },
+      }
 
-      _onEmojiResponse: function () {
+      _onEmojiResponse() {
         var emoji,
           i,
           obj;
@@ -790,13 +852,13 @@ to style the tone picker's dialog.
         this.onResize();
 
         this.isRendered = true;
-      },
+      }
 
       /**
        * tactile event listeners
        */
 
-      onResize: function () {
+      onResize() {
         this.cancelDebouncer('emojioneResizeDebounce');
 
         this.debounce('emojioneResizeDebounce', function () {
@@ -817,8 +879,8 @@ to style the tone picker's dialog.
             this.async(function () {
               for (i in this.categories) {
                 j = parseInt(i) + 1;
-                badge = Polymer.dom(this.root).querySelector('#badge' + j);
-                tab = Polymer.dom(this.root).querySelector('#tab' + j);
+                badge = this.shadowRoot.querySelector('#badge' + j);
+                tab = this.shadowRoot.querySelector('#tab' + j);
 
                 badge.position = {
                   'top': tab.offsetTop + tab.clientHeight,
@@ -828,31 +890,31 @@ to style the tone picker's dialog.
             });
           }
         }, 200);
-      },
+      }
 
-      onCloseCtrlEvent: function (event) {
+      onCloseCtrlEvent(event) {
         // if ctrl key is up
         if (!event.ctrlKey) {
           this.hasCtrl = false;
         }
-      },
+      }
 
-      onCtrlEvent: function (event) {
+      onCtrlEvent(event) {
         // if ctrl key is down
         if (event.ctrlKey && this.showCtrl) {
           this.hasCtrl = true;
         }
-      },
+      }
 
-      onCtrlComboEvent: function (event) {
+      onCtrlComboEvent(event) {
         var keyboardEvent = event.detail.keyboardEvent,
           key = keyboardEvent.key || keyboardEvent.code;
         if (this.isRendered) {
           this.selected = parseInt(key);
         }
-      },
+      }
 
-      onArrowEvent: function (event) {
+      onArrowEvent(event) {
         // get next and previous sibling
         var keyboardEvent = event.detail.keyboardEvent,
           currentElement = keyboardEvent.target,
@@ -889,9 +951,9 @@ to style the tone picker's dialog.
         } else if (key === 'ArrowDown') {
           this._onFastForward({positionInRow: positionInRow, rows: rows, row: row, count: count, children: children});
         }
-      },
+      }
 
-      _onFastBackward: function (params) {
+      _onFastBackward(params) {
         var previousPosition = params.positionInRow + ((params.row - 2) * this.emojiInRow),
           secondLastPosition = params.positionInRow + ((params.rows - 2) * this.emojiInRow),
           lastPosition = params.positionInRow + ((params.rows - 1) * this.emojiInRow);
@@ -905,18 +967,18 @@ to style the tone picker's dialog.
         } else {
           params.children[previousPosition].focus();
         }
-      },
+      }
 
-      _onFastForward: function (params) {
+      _onFastForward(params) {
         var nextPosition = params.positionInRow + (params.row * this.emojiInRow);
         if (params.row <= params.rows && nextPosition < params.count) {
           params.children[nextPosition].focus();
         } else {
           params.children[params.positionInRow].focus();
         }
-      },
+      }
 
-      _onPreviousElement: function (params) {
+      _onPreviousElement(params) {
         // select previous element or the last element in row
         if (params.previousElement) {
           params.previousElement.focus();
@@ -928,18 +990,18 @@ to style the tone picker's dialog.
             params.children[params.count - 1].focus();
           }
         }
-      },
+      }
 
-      _onNextElement: function (params) {
+      _onNextElement(params) {
         // select previous element or the last element in row and not the last element
         if (params.nextElement && params.position < params.lastElement && params.position + 1 < params.count) {
           params.nextElement.focus();
         } else {
           params.children[params.firstElement].focus();
         }
-      },
+      }
 
-      setEmojiTap: function (event) {
+      setEmojiTap(event) {
         var model,
           emoji;
         // get the model and handle both keyboard and normal event
@@ -978,9 +1040,9 @@ to style the tone picker's dialog.
           //  also add it to the recentlyUsedEmojis
           this.unshift('recentlyUsedEmojis', emoji.code_points.base);
         }
-      },
+      }
 
-      onClearSearchTap: function () {
+      onClearSearchTap() {
         this.search = [];
       }
     });
