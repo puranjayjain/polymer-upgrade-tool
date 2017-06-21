@@ -2,7 +2,7 @@ const gulp = require('gulp');
 const scan = require('gulp-scan');
 const chalk = require('chalk');
 
-const replaceMap = require('./lib/gulp/gulp-replacemap.js');
+const replaceJsMap = require('./lib/gulp/gulp-js-replacemap.js');
 
 // file config or otherwise
 const terminal = {
@@ -10,7 +10,7 @@ const terminal = {
   error: chalk.bold.red
 };
 
-const replaceMapOption = '../gulp/map.js';
+const replaceJsMapOption = '../gulp/javascriptMap.js';
 const src = 'test/emojione-selector.html';
 const dest = 'output';
 
@@ -36,7 +36,7 @@ const replaceElement = () => {
   return new Promise((resolve, reject) => {
     gulp.src(src)
     // replace in js in the Polymer({ inside the definition })
-      .pipe(replaceMap({before: /Polymer\({/ig, after: /<\/script>/igm, map: replaceMapOption}))
+      .pipe(replaceJsMap({before: /Polymer\({/ig, after: /<\/script>/igm, map: replaceJsMapOption}))
       .pipe(gulp.dest(dest))
       .on('end', () => resolve(1))
       .on('error', () => reject(0));
